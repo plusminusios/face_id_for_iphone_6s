@@ -259,8 +259,10 @@ didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer
 
         UIWindow *keyWindow = nil;
         for (UIWindowScene *scene in [UIApplication sharedApplication].connectedScenes) {
-            if ([scene isKindOfClass:[UIWindowScene class]]) {
-                keyWindow = scene.keyWindow;
+           if ([scene isKindOfClass:[UIWindowScene class]]) {
+                if (@available(iOS 15.0, *)) {
+                    keyWindow = scene.keyWindow;
+                }
                 break;
             }
         }
