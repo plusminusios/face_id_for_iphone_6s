@@ -6,16 +6,20 @@ jobs:
   build:
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Install Theos
         run: |
-          bash -c "$(curl -fsSL https://raw.githubusercontent.com/theos/theos/master/bin/install-theos)"
+          brew install ldid xz make
+          git clone --recursive https://github.com/theos/theos.git $HOME/theos
+          curl -LO https://github.com/theos/sdks/releases/download/2023-09-26/iPhoneOS16.5.sdk.tar.xz
+          tar -xf iPhoneOS16.5.sdk.tar.xz -C $HOME/theos/sdks/
 
       - name: Build
         run: |
-          export THEOS=~/theos
-          make package FINALPACKAGE=1
+          export THEOS=$HOME/theos
+          export PATH=$HOME/theos/bin:$PATH
+          gmake package FINALPACKAGE=1
 
       - name: Upload DEB
         uses: actions/upload-artifact@v4
