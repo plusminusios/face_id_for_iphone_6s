@@ -35,6 +35,22 @@ static void FIDSavePrefs(NSString *key, id value) {
 - (void)_biometricAuthenticationDidFail;
 @end
 
+@interface PSSpecifier : NSObject
+@property (nonatomic, copy) NSString *name;
+@property (nonatomic, strong) NSMutableDictionary *properties;
++ (instancetype)preferenceSpecifierNamed:(NSString *)name
+                                  target:(id)target
+                                     set:(SEL)set
+                                     get:(SEL)get
+                                  detail:(Class)detail
+                                    cell:(int)cell
+                                    edit:(Class)edit;
+@end
+
+@interface PSListController : UIViewController
+- (NSArray *)specifiers;
+@end
+
 // ─── Сканер ───────────────────────────────────────────────────────────────────
 @interface FIDScanner : NSObject <AVCaptureVideoDataOutputSampleBufferDelegate>
 @property (nonatomic, strong) AVCaptureSession *session;
@@ -331,23 +347,23 @@ static void FIDRun(NSString *reason, void(^reply)(BOOL, NSError*)) {
     }
 
     // Группа
-    id grp = [%c(PSSpecifier) preferenceSpecifierNamed:@"Face ID"
-                                               target:self set:nil get:nil
-                                               detail:nil cell:1 edit:nil];
+    id grp = [PSSpecifier preferenceSpecifierNamed:@"Face ID"
+                                           target:self set:nil get:nil
+                                           detail:nil cell:1 edit:nil];
 
     // Переключатель
-    id tog = [%c(PSSpecifier) preferenceSpecifierNamed:@"Face ID включён"
-                                               target:self
-                                                  set:@selector(fidSetEnabled:specifier:)
-                                                  get:@selector(fidGetEnabled:)
-                                               detail:nil cell:9 edit:nil];
+    id tog = [PSSpecifier preferenceSpecifierNamed:@"Face ID включён"
+                                           target:self
+                                              set:@selector(fidSetEnabled:specifier:)
+                                              get:@selector(fidGetEnabled:)
+                                           detail:nil cell:9 edit:nil];
 
     // Строгость
-    id sens = [%c(PSSpecifier) preferenceSpecifierNamed:@"Строгость распознавания"
-                                                target:self
-                                                   set:@selector(fidSetFrames:specifier:)
-                                                   get:@selector(fidGetFrames:)
-                                                detail:nil cell:9 edit:nil];
+    id sens = [PSSpecifier preferenceSpecifierNamed:@"Строгость распознавания"
+                                            target:self
+                                               set:@selector(fidSetFrames:specifier:)
+                                               get:@selector(fidGetFrames:)
+                                            detail:nil cell:9 edit:nil];
 
     [specs insertObject:sens atIndex:0];
     [specs insertObject:tog  atIndex:0];
