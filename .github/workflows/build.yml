@@ -16,9 +16,8 @@ jobs:
 
       - name: Download SDK
         run: |
-          wget -q "https://github.com/theos/sdks/releases/download/2023-09-26/iPhoneOS16.5.sdk.tar.xz" \
-            -O sdk.tar.xz
-          ls -lh sdk.tar.xz
+          curl -L "https://github.com/theos/sdks/releases/download/SDK%20Release%201/iPhoneOS16.5.sdk.tar.xz" \
+            -o sdk.tar.xz --retry 5 --location
           tar xJf sdk.tar.xz -C $HOME/theos/sdks/
 
       - name: Build
